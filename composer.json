@@ -1,0 +1,27 @@
+{
+  "name": "vladdnepr/importio",
+  "description": "Move data from Import.io to MySQL Database",
+  "minimum-stability": "stable",
+  "license": "proprietary",
+  "authors": [
+    {
+      "name": "Vladislav Lyshenko",
+      "email": "vladdnepr1989@gmail.com"
+    }
+  ],
+  "autoload": {
+    "psr-4": {"VladDnepr\\ImportIO\\": "src/"}
+  },
+  "bin": ["bin/transfer"],
+  "extra": {
+    "phar": {
+      "bundler": "composer"
+    }
+  }
+  "require": {
+    "guzzlehttp/guzzle": "^6.3",
+    "clue/phar-composer": "^1.0",
+    "guiguiboy/php-cli-progress-bar": "^0.0.4",
+    "usmanhalalit/pixie": "^2.0"
+  }
+}

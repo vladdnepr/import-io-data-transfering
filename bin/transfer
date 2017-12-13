@@ -1,0 +1,50 @@
+<?php
+
+require __DIR__ . '/../vendor/autoload.php';
+
+$options = getopt('', [
+    'key:', 'id:', 'mhost:', 'muser:', 'mpass:', 'mdb:'
+]);
+
+if (!isset($options['key'])
+    || !isset($options['id'])
+    || !isset($options['mhost'])
+    || !isset($options['muser'])
+    || !isset($options['mpass'])
+    || !isset($options['mdb'])
+) {
+    echo "Usage: php mover.phar --key IMPORT_IO_KEY --id IMPORT_IO_EXTRACTOR_ID " .
+        "--mhost MYSQL_HOST --muser MYSQL_USER --mpass MYSQL_PASS --mdb MYSQL_DB\n";
+    exit(1);
+}
+
+try {
+    $db = new \VladDnepr\ImportIO\Database($options['mhost'], $options['muser'], $options['mpass'], $options['mdb']);
+    $request = new \VladDnepr\ImportIO\ServiceRequest(
+        $options['key'],
+        $options['id']
+    );
+    $response = $request->getResponse();
+
+    $processed = 0;
+
+    if ($errors = $request->getErrors()) {
+        echo "Request was have errors: " . implode("\n", $errors) . "\n";
+    }
+
+    if ($response) {
+        if ($errors = $response->getErrors()) {
+            echo "Response was have errors: " . implode("\n", $errors) . "\n";
+        }
+
+        $progressBar = new \ProgressBar\Manager(0, $response->getTotalRows());
+
+        foreach ($response->getRows(1) as $rows) {
+            $db->insert('test', $rows);
+
+            $progressBar->update($processed += count($rows));
+        }
+    }
+} catch (\Exception $e) {
+    echo "General error was happened: " . $e->getMessage() . "\n";
+}
