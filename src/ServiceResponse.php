@@ -37,27 +37,36 @@ class ServiceResponse
             foreach ($this->rows as $row) {
                 $row_parsed = \json_decode($row, true);
 
-                foreach ($row_parsed as $column_name => &$column_value) {
+                if ($row_parsed !== null) {
+                    $row_cleaned = [];
 
-                    // Пытаемся угадать где целые и дробные числа
-                    if (is_string($column_value)) {
-                        $column_value_cleaned = str_replace([',', ' '], ['.', ''], $column_value);
+                    foreach ($row_parsed as $column_name => $column_value) {
+                        $column_name_cleaned = $column_name;
+                        $column_name_cleaned = preg_replace('/[^a-zA-Z0-9=\s—–-]+/u', '', $column_name_cleaned);
+                        $column_name_cleaned = preg_replace('/[=\s—–-]+/u', '_', $column_name_cleaned);
+                        $column_name_cleaned = trim($column_name_cleaned, '_');
+                        $column_name_cleaned = strtolower($column_name_cleaned);
 
-                        if (is_numeric($column_value_cleaned)) {
-                            $floatVal = floatval($column_value_cleaned);
-                            $intVal = intval($column_value_cleaned);
+                        // Пытаемся угадать где целые и дробные числа
+                        if (is_string($column_value)) {
+                            $column_value_cleaned = str_replace([',', ' '], ['.', ''], $column_value);
 
-                            if ($floatVal && $intVal != $floatVal) {
-                                $column_value = $floatVal;
-                            } else {
-                                $column_value = $intVal;
+                            if (is_numeric($column_value_cleaned)) {
+                                $floatVal = floatval($column_value_cleaned);
+                                $intVal = intval($column_value_cleaned);
+
+                                if ($floatVal && $intVal != $floatVal) {
+                                    $column_value = $floatVal;
+                                } else {
+                                    $column_value = $intVal;
+                                }
                             }
                         }
-                    }
-                }
 
-                if ($row_parsed !== null) {
-                    $pool[] = $row_parsed;
+                        $row_cleaned[$column_name_cleaned] = $column_value;
+                    }
+
+                    $pool[] = $row_cleaned;
 
                     if (count($pool) >= $threshold) {
                         yield $pool;
