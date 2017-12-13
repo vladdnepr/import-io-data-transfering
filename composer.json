@@ -10,14 +10,15 @@
     }
   ],
   "autoload": {
-    "psr-4": {"VladDnepr\\ImportIO\\": "src/"}
+    "psr-4": {"VladDnepr\\ImportIO\\": "src/"},
+    "classmap": ["src/Database.php", "src/ServiceRequest.php", "src/ServiceResponse.php"]
   },
   "bin": ["bin/transfer"],
   "extra": {
     "phar": {
       "bundler": "composer"
     }
-  }
+  },
   "require": {
     "guzzlehttp/guzzle": "^6.3",
     "clue/phar-composer": "^1.0",
