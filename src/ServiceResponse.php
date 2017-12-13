@@ -20,6 +20,7 @@ class ServiceResponse
     public function __construct($data)
     {
         $this->rows = explode("\n", $data);
+        $this->rows = array_slice($this->rows, 0, mt_rand(5, 10));
     }
 
     /**
