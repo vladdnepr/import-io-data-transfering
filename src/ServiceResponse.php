@@ -61,6 +61,8 @@ class ServiceResponse
                                     $column_value = $intVal;
                                 }
                             }
+                        } elseif (is_array($column_value)) {
+                            $column_value = \json_encode($column_value);
                         }
 
                         $row_cleaned[$column_name_cleaned] = $column_value;
