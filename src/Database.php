@@ -50,7 +50,7 @@ class Database
             $columns = ['ID INT( 11 ) AUTO_INCREMENT PRIMARY KEY'];
 
             foreach ($row_example as $column_name => $column_value) {
-                $type = 'VARCHAR( 255 )';
+                $type = 'TEXT';
 
                 if (is_float($column_value)) {
                     $type = 'FLOAT';
