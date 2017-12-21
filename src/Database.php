@@ -61,7 +61,9 @@ class Database
                 $columns[] = $column_name . ' ' . $type . ' NOT NULL';
             }
 
-            $this->builder->pdo()->exec("CREATE table {$table} (" . implode(', ', $columns) . ");");
+            $this->builder->pdo()->exec(
+                "CREATE table {$table} (" . implode(', ', $columns) . ") DEFAULT CHARSET utf8;"
+            );
         }
     }
 

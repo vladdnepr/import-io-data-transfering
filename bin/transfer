@@ -37,13 +37,15 @@ try {
             echo "Response was have errors: " . implode("\n", $errors) . "\n";
         }
 
-        $progressBar = new \ProgressBar\Manager(0, $response->getTotalRows());
+        //$progressBar = new \ProgressBar\Manager(0, $response->getTotalRows());
 
-        foreach ($response->getRows(1) as $rows) {
+        foreach ($response->getRows(10) as $rows) {
             $db->insert('test', $rows);
-
-            $progressBar->update($processed += count($rows));
+            echo '.';
+            //$progressBar->update($processed += count($rows));
         }
+
+        echo "\nSuccess\n";
     }
 } catch (\Exception $e) {
     echo "General error was happened: " . $e->getMessage() . "\n";
