@@ -40,13 +40,23 @@ class Database
      */
     public function insert($table, $rows)
     {
-        $this->ensureTableExist($table, reset($rows));
+        $this->ensureTableExist($table, $rows);
         return $this->builder->table($table)->insert($rows);
     }
 
-    public function ensureTableExist($table, $row_example)
+    public function ensureTableExist($table, $rows)
     {
-        if (!$this->isTableExists($table) && $row_example) {
+        if (!$this->isTableExists($table) && $rows) {
+            $row_example = [];
+
+            foreach ($rows as $row) {
+                foreach ($row as $column_name => $column_value) {
+                    if (!isset($row_example[$column_name])) {
+                        $row_example[$column_name] = $column_value;
+                    }
+                }
+            }
+
             $columns = ['ID INT( 11 ) AUTO_INCREMENT PRIMARY KEY'];
 
             foreach ($row_example as $column_name => $column_value) {
