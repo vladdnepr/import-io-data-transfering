@@ -2,7 +2,7 @@
   "name": "vladdnepr/importio",
   "description": "Move data from Import.io to MySQL Database",
   "minimum-stability": "stable",
-  "license": "proprietary",
+  "license": "MIT",
   "authors": [
     {
       "name": "Vladislav Lyshenko",
