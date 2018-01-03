@@ -3,7 +3,7 @@
 require __DIR__ . '/../vendor/autoload.php';
 
 $options = getopt('', [
-    'key:', 'id:', 'mhost:', 'muser:', 'mpass:', 'mdb:'
+    'key:', 'id:', 'mhost:', 'muser:', 'mpass:', 'mdb:', 'mtable:'
 ]);
 
 if (!isset($options['key'])
@@ -12,9 +12,10 @@ if (!isset($options['key'])
     || !isset($options['muser'])
     || !isset($options['mpass'])
     || !isset($options['mdb'])
+    || !isset($options['mtable'])
 ) {
-    echo "Usage: php mover.phar --key IMPORT_IO_KEY --id IMPORT_IO_EXTRACTOR_ID " .
-        "--mhost MYSQL_HOST --muser MYSQL_USER --mpass MYSQL_PASS --mdb MYSQL_DB\n";
+    echo "Usage: php " . $_SERVER['SCRIPT_NAME'] . " --key IMPORT_IO_KEY --id IMPORT_IO_EXTRACTOR_ID " .
+        "--mhost MYSQL_HOST --muser MYSQL_USER --mpass MYSQL_PASS --mdb MYSQL_DB --mtable MYSQL_TABLE\n";
     exit(1);
 }
 
@@ -37,12 +38,9 @@ try {
             echo "Response was have errors: " . implode("\n", $errors) . "\n";
         }
 
-        //$progressBar = new \ProgressBar\Manager(0, $response->getTotalRows());
-
         foreach ($response->getRows(10) as $rows) {
-            $db->insert('test', $rows);
+            $db->insert($options['mtable'], $rows);
             echo '.';
-            //$progressBar->update($processed += count($rows));
         }
 
         echo "\nSuccess\n";
